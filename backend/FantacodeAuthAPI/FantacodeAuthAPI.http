@@ -1,0 +1,6 @@
+@FantacodeAuthAPI_HostAddress = http://localhost:5289
+
+GET {{FantacodeAuthAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
