@@ -92,38 +92,52 @@ Follow these steps to get the backend and frontend running on your local machine
 ### <a name="backendsetup">**Backend Setup**
 
 1. **Navigate to the backend project directory:**  
+   ```
    cd fantacode-login-dashboard/backend/FantacodeLoginDashboard
+   ```
 
-2. **Restore .NET dependencies:**  
+3. **Restore .NET dependencies:**  
+   ```
    dotnet restore
+   ```
 
-3. **Run the backend API:**  
+4. **Run the backend API:**  
+   ```
    dotnet run
+   ```
 
    The API will typically run on http://localhost:5289 (or a similar port). Keep this terminal window open.
 
 ### <a name="frontendsetup">**Frontend Setup**
 
 1. **Navigate to the frontend project directory:**  
+   ```
    cd fantacode-login-dashboard/frontend/FantacodeFrontend
+   ```
 
-2. **Install Node.js dependencies:**  
+3. **Install Node.js dependencies:**  
+   ```
    npm install
+   ```
 
    This command will install all Angular, Tailwind CSS, and charting library dependencies.  
    * **Note if you used WSL like I did:** If you encounter npm ERR\! could not determine executable to run or Cannot find module errors, ensure node\_modules and package-lock.json are completely removed (even manually via Windows Explorer \\\\wsl$\\Ubuntu\\root\\your-project-path) before running npm install.  
-3. **Start the Angular development server:**  
+5. **Start the Angular development server:**  
+   ```
    ng serve
+   ```
 
    The Angular application will typically run on http://localhost:4200. Keep this terminal window open.
 
 ## <a name="usage">**Usage**
 
-1. Ensure both the .NET backend (dotnet run) and Angular frontend (ng serve) are running.  
+1. Ensure both the .NET backend (```dotnet run```) and Angular frontend (```ng serve```) are running.  
 2. Open your web browser and navigate to http://localhost:4200/.  
 3. You will be presented with the login page. Use the following credentials:  
-   * **Username:** user1  
-   * **Password:** password123  
+   ```
+   Username: user1  
+   Password: password123
+   ```
 4. Upon successful login, you will be redirected to the Dashboard page, displaying the hardcoded sales data in a bar chart.  
 5. Click the "Logout" button to return to the login page.
 
@@ -157,14 +171,14 @@ The application is designed with horizontal scaling in mind, addressing the prob
   * Check the CORS configuration in backend/FantacodeLoginDashboard/Program.cs to ensure http://localhost:4200 is allowed.  
 * **Frontend compilation errors (e.g., TS-996008: Component is standalone... or dependency resolution issues):**  
   * **Perform a clean reinstall:**  
-    1. Stop ng serve (Ctrl+C).  
+    1. Stop ```ng serve``` (Ctrl+C).  
     2. Close all WSL terminals.  
     3. Manually delete node\_modules and package-lock.json from frontend/FantacodeFrontend.  
     4. Open a fresh WSL terminal.  
     5. Navigate to frontend/FantacodeFrontend.  
-    6. Run npm cache clean \--force.  
-    7. Run ng cache clean \--force.  
-    8. Run npm install.  
+    6. Run ```npm cache clean \--force.```  
+    7. Run ```ng cache clean \--force.```  
+    8. Run ```npm install.```  
   * Ensure standalone: false is present in your component decorators if you are declaring them in an NgModule.  
 * **"Invalid data format received from backend." on Dashboard:**  
   * Verify the Dashboard() method in AuthController.cs is returning data with Labels (list of strings) and Values (list of integers).
