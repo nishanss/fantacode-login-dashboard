@@ -6,15 +6,15 @@ This project demonstrates a simple login and dashboard application, using both .
 
 1. [Objective](#objective)  
 2. [Features](#features)   
-3. [Project Structure](https://www.google.com/search?q=%23project-structure)  
-4. [Prerequisites](https://www.google.com/search?q=%23prerequisites)  
-5. [Setup Instructions](https://www.google.com/search?q=%23setup-instructions)  
-   * [Backend Setup](https://www.google.com/search?q=%23backend-setup)  
-   * [Frontend Setup](https://www.google.com/search?q=%23frontend-setup)  
-6. [Usage](https://www.google.com/search?q=%23usage)  
-7. [Design for Distributed Environment / Horizontal Scaling](https://www.google.com/search?q=%23design-for-distributed-environment--horizontal-scaling)  
-8. [Troubleshooting Tips](https://www.google.com/search?q=%23troubleshooting-tips)  
-9. [Future Enhancements](https://www.google.com/search?q=%23future-enhancements)
+3. [Project Structure](#project-structure) 
+4. [Prerequisites](#prerequisites) 
+5. [Setup Instructions](#setup) 
+   * [Backend Setup](#backendsetup)  
+   * [Frontend Setup](#frontendsetup) 
+6. [Usage](#usage)  
+7. [Design for Distributed Environment / Horizontal Scaling](#design)  
+8. [Troubleshooting Tips](#troubleshoot)  
+9. [Future Enhancements](#future) 
 
 ## <a name="objective"></a>**Objective**
 
@@ -34,7 +34,7 @@ The primary objective of this project is to build a basic login and dashboard ap
   * Chart data is fetched from a protected backend API endpoint (hardcoded sales data for demonstration).  
   * Logout functionality.
 
-## **Project Structure**
+## <a name="project-structure">**Project Structure**
 
 The project is divided into two main parts:
 
@@ -75,7 +75,7 @@ fantacode-login-dashboard/
         ├── tailwind.config.js  
         └── ...
 
-## **Prerequisites**
+## <a name="prerequisites">**Prerequisites**
 
 Before you begin, ensure you have the following installed on your system:
 
@@ -85,11 +85,11 @@ Before you begin, ensure you have the following installed on your system:
 * **.NET SDK:** .NET 8.0 SDK (or compatible version).  
 * **Code Editor:** Visual Studio Code (recommended) or any other.
 
-## **Setup Instructions**
+## <a name="setup">**Setup Instructions**
 
 Follow these steps to get the backend and frontend running on your local machine.
 
-### **Backend Setup**
+### <a name="backendsetup">**Backend Setup**
 
 1. **Navigate to the backend project directory:**  
    cd fantacode-login-dashboard/backend/FantacodeLoginDashboard
@@ -102,7 +102,7 @@ Follow these steps to get the backend and frontend running on your local machine
 
    The API will typically run on http://localhost:5289 (or a similar port). Keep this terminal window open.
 
-### **Frontend Setup**
+### <a name="frontendsetup">**Frontend Setup**
 
 1. **Navigate to the frontend project directory:**  
    cd fantacode-login-dashboard/frontend/FantacodeFrontend
@@ -117,7 +117,7 @@ Follow these steps to get the backend and frontend running on your local machine
 
    The Angular application will typically run on http://localhost:4200. Keep this terminal window open.
 
-## **Usage**
+## <a name="usage">**Usage**
 
 1. Ensure both the .NET backend (dotnet run) and Angular frontend (ng serve) are running.  
 2. Open your web browser and navigate to http://localhost:4200/.  
@@ -127,7 +127,7 @@ Follow these steps to get the backend and frontend running on your local machine
 4. Upon successful login, you will be redirected to the Dashboard page, displaying the hardcoded sales data in a bar chart.  
 5. Click the "Logout" button to return to the login page.
 
-## **Design for Distributed Environment / Horizontal Scaling**
+## <a name="design">**Design for Distributed Environment / Horizontal Scaling**
 
 The application is designed with horizontal scaling in mind, addressing the problem statement of deployment in a distributed environment with multiple instances.
 
@@ -149,7 +149,7 @@ The application is designed with horizontal scaling in mind, addressing the prob
      * **Frontend:** Angular applications are served as static files (HTML, CSS, JS) and can be deployed to any static file hosting service (e.g., Nginx, Apache, Azure Static Web Apps, AWS S3 \+ CloudFront) behind a CDN for global distribution and low latency.  
      * **Backend:** .NET Core applications are lightweight and can be easily containerized (e.g., Docker) and deployed to container orchestration platforms (e.g., Kubernetes, Azure Kubernetes Service, AWS ECS) or serverless compute (e.g., Azure App Service, AWS Lambda with API Gateway). These platforms inherently support horizontal scaling by adding more instances as demand increases.
 
-## **Troubleshooting Tips**
+## <a name="troubleshoot">**Troubleshooting Tips**
 
 * **"Server returned code 0, body was: \[object ProgressEvent\]" or CORS errors:**  
   * Ensure your .NET backend is running (dotnet run).  
@@ -169,7 +169,7 @@ The application is designed with horizontal scaling in mind, addressing the prob
 * **"Invalid data format received from backend." on Dashboard:**  
   * Verify the Dashboard() method in AuthController.cs is returning data with Labels (list of strings) and Values (list of integers).
 
-## **Future Enhancements**
+## <a name="future">**Future Enhancements**
 
 * **Database Integration:** Replace dummy user data and dashboard data with a real database (e.g., SQL Server, PostgreSQL, MongoDB).  
 * **User Registration:** Add a user registration page.  
