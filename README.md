@@ -4,8 +4,8 @@ This project demonstrates a simple login and dashboard application, using both .
 
 ## **Table of Contents**
 
-1. [Objective](https://www.google.com/search?q=%23objective)  
-2. [Features](https://www.google.com/search?q=%23features)  
+1. [Objective](#objective)  
+2. [Features](#features)   
 3. [Project Structure](https://www.google.com/search?q=%23project-structure)  
 4. [Prerequisites](https://www.google.com/search?q=%23prerequisites)  
 5. [Setup Instructions](https://www.google.com/search?q=%23setup-instructions)  
@@ -16,11 +16,11 @@ This project demonstrates a simple login and dashboard application, using both .
 8. [Troubleshooting Tips](https://www.google.com/search?q=%23troubleshooting-tips)  
 9. [Future Enhancements](https://www.google.com/search?q=%23future-enhancements)
 
-## **Objective**
+## <a name="objective"></a>**Objective**
 
 The primary objective of this project is to build a basic login and dashboard application to demonstrate proficiency in full-stack development using .NET Core for the backend API and Angular for the frontend.
 
-## **Features**
+## <a name="features"></a>**Features**
 
 * **Login Page:**  
   * User authentication with username and password fields.  
