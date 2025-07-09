@@ -1,23 +1,26 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using FantacodeAuthAPI.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration; 
 
-namespace FantacodeAuthAPI.Controllers
+namespace FantacodeLoginDashboard.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private static readonly List<User> _users = new List<User>
+
+        // Dummy user data (replace with DB in real app)
+        private static readonly Dictionary<string, string> Users = new()
         {
-            new User { Username = "user1", PasswordHash = "password123" }, 
-            new User { Username = "admin", PasswordHash = "adminpass" }
+            { "user1", "password123" },
+            { "admin", "adminpass" }
         };
 
         public AuthController(IConfiguration configuration)
@@ -25,69 +28,63 @@ namespace FantacodeAuthAPI.Controllers
             _configuration = configuration;
         }
 
-        [AllowAnonymous] 
+        // POST: api/Auth/login
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest request)
+        public IActionResult Login([FromBody] LoginModel model)
         {
-            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            if (Users.TryGetValue(model.Username, out var storedPassword) && storedPassword == model.Password)
             {
-                return BadRequest(new { Message = "Username and password are required." });
+                var jwtSettings = _configuration.GetSection("JwtSettings");
+
+                var secretKey = jwtSettings["SecretKey"];
+                var issuer = jwtSettings["Issuer"];
+                var audience = jwtSettings["Audience"];
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, model.Username),
+                    new Claim(ClaimTypes.Name, model.Username),
+                    new Claim(ClaimTypes.Role, "User")
+                };
+
+                var token = new JwtSecurityToken(
+                    issuer: issuer,
+                    audience: audience,
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddHours(1),
+                    signingCredentials: creds
+                );
+
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+                return Ok(new { Message = "Login successful", Token = tokenString });
             }
-
-            var user = _users.FirstOrDefault(u => u.Username == request.Username && u.PasswordHash == request.Password);
-
-            if (user == null)
-            {
-                return Unauthorized(new { Message = "Invalid username or password." });
-            }
-
-            var token = GenerateJwtToken(user);
-
-            return Ok(new { Token = token, Message = "Login successful." });
+            return Unauthorized(new { Message = "Invalid credentials" });
         }
 
+        // GET: api/Auth/dashboard
         [Authorize]
         [HttpGet("dashboard")]
-        public IActionResult GetDashboardData()
+        public IActionResult Dashboard()
         {
-            var username = User.Identity?.Name;
-            var chartData = new
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var dashboardData = new
             {
-                Labels = new[] { "January", "February", "March", "April", "May", "June" },
-                Data = new[] { 65, 59, 80, 81, 56, 55 },
-                Title = "Monthly Sales Data"
+                Labels = new List<string> { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" },
+                Values = new List<int> { 120, 150, 130, 180, 200, 160, 220, 210, 190, 230, 240, 250 }
             };
 
-            return Ok(new { Message = $"Welcome to the dashboard, {username}!", ChartData = chartData });
+            return Ok(dashboardData);
         }
+    }
 
-        private string GenerateJwtToken(User user)
-        {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["SecretKey"];
-            var issuer = jwtSettings["Issuer"];
-            var audience = jwtSettings["Audience"];
-            var expiryMinutes = int.Parse(jwtSettings["ExpiryMinutes"]!);
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Username), 
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), 
-                new Claim(ClaimTypes.Name, user.Username), 
-                new Claim(ClaimTypes.Role, user.Role) 
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(expiryMinutes),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+    public class LoginModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FantacodeAuthAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+63017f3a8029200506ef3413de9aca3ec6d1a07d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a6471d268d2f1e9c62fda5540771d61c8d5a677c")]
 [assembly: System.Reflection.AssemblyProductAttribute("FantacodeAuthAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FantacodeAuthAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

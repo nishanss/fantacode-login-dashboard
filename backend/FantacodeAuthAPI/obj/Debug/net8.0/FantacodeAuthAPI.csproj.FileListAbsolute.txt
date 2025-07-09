@@ -41,3 +41,4 @@
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/FantacodeAuthAPI.pdb
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/FantacodeAuthAPI.genruntimeconfig.cache
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/ref/FantacodeAuthAPI.dll
+/root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/FantacodeAuthAPI.sourcelink.json
