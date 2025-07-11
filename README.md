@@ -23,11 +23,12 @@ The primary objective of this project is to build a basic login and dashboard ap
 ## <a name="features"></a>**Features**
 
 * **Login Page:**  
-  * User authentication with username and password fields.  
-  * Redirection to the dashboard page upon successful login.  
-  * Display of basic error messages for invalid login attempts.  
-  * Rate-limiting mechanism implemented on the login API to prevent brute-force attacks.  
-  * Authentication token (JWT) generation on successful login.  
+  * User authentication with username and password fields.
+  * Redirection to the dashboard page upon successful login.
+  * Display of basic error messages for invalid login.
+  * Distributed Rate-limiting mechanism implemented on the login API (and all other APIs) using Redis to prevent brute-force attacks and ensure consistency across multiple backend instances.
+  * Authentication token (JWT) generation on successful login.
+
 * **Dashboard Page:**  
   * Accessible only after successful authentication.  
   * Displays a bar chart using @swimlane/ngx-charts.  
@@ -93,7 +94,7 @@ Follow these steps to get the backend and frontend running on your local machine
 
 1. **Navigate to the backend project directory:**  
    ```
-   cd fantacode-login-dashboard/backend/FantacodeLoginDashboard
+   cd fantacode-login-dashboard/backend/FantacodeAuthAPI
    ```
 
 3. **Restore .NET dependencies:**  
@@ -129,9 +130,29 @@ Follow these steps to get the backend and frontend running on your local machine
 
    The Angular application will typically run on http://localhost:4200. Keep this terminal window open.
 
+### **Redis Setup (for Distributed Rate Limiting)**
+1. **The backend uses Redis for distributed rate limiting. You need a running Redis instance.**
+2. **Ensure Docker Desktop is running on your machine.**
+3. **Open a NEW terminal window (can be WSL or Command Prompt/PowerShell on Windows).**
+4. **Run a Redis container:**
+```
+docker run -p 6379:6379 redis:alpine
+```
+
+
+5. **This command pulls the redis/redis-stack-server image (which includes Redis and RedisInsight for management), names the container my-redis, maps port 6379 (default Redis port) from the container to your host, and runs it in detached mode (-d).**
+6. **If you already have a container named my-redis, you might need to stop and remove it first: docker stop my-redis && docker rm my-redis.**
+7. **Verify Redis is running:**
+```
+docker ps
+```
+
+8. **You should see my-redis listed.**
+
+
 ## <a name="usage">**Usage**
 
-1. Ensure both the .NET backend (```dotnet run```) and Angular frontend (```ng serve```) are running.  
+1. Ensure Redis, .NET backend (```dotnet run```) and Angular frontend (```ng serve```) are running.  
 2. Open your web browser and navigate to http://localhost:4200/.  
 3. You will be presented with the login page. Use the following credentials:  
    ```
@@ -139,7 +160,8 @@ Follow these steps to get the backend and frontend running on your local machine
    Password: password123
    ```
 4. Upon successful login, you will be redirected to the Dashboard page, displaying the hardcoded sales data in a bar chart.  
-5. Click the "Logout" button to return to the login page.
+5. Test Rate Limiting: Try to log in rapidly more than the allowed limit (e.g., 2 times within 1 minute, or 5 times within 30 seconds as per appsettings.json). You should start receiving "Too many requests. Please try again later." errors on the GUI.
+6. Click the "Logout" button to return to the login page.
 
 ## <a name="design">**Design for Distributed Environment / Horizontal Scaling**
 
@@ -152,10 +174,10 @@ The application is designed with horizontal scaling in mind, addressing the prob
    * **Shared Secret Key:** The JWT secret key (JwtSettings:SecretKey in appsettings.json) must be identical across all deployed backend instances. In a production environment, this would be managed securely (e.g., via environment variables, Azure Key Vault, AWS Secrets Manager, Kubernetes Secrets) rather than directly in appsettings.json.  
 2. **Client-Side Session Management:**  
    * The authentication token (jwt\_token) is stored in the browser's localStorage on the frontend. This means the client (browser) is responsible for maintaining the session state, not the server. This further supports stateless backend instances.  
-3. **Rate Limiting (Distributed Cache Consideration):**  
-   * The AspNetCoreRateLimit library is used for rate limiting the login API.  
-   * By default, AspNetCoreRateLimit uses an in-memory cache (MemoryCacheRateLimitCounterStore). **For a distributed environment, this would need to be replaced with a distributed cache store** (e.g., Redis, SQL Server, Azure Cache for Redis) to ensure rate limits are consistent across all instances. If one instance sees 5 login attempts, another instance must also count those 5 attempts to prevent bypassing the limit by hitting different servers. Redis was planned, but not used due to unneeded complexity. 
-   * The Program.cs is configured to easily swap out the IRateLimitCounterStore and IIpPolicyStore implementations.  
+3. **Distributed Rate Limiting (Implemented with Redis):**  
+   * The AspNetCoreRateLimit library is used for rate limiting the login API and other endpoints.  
+   * Crucially, the rate limit counters are now stored in Redis (DistributedCacheRateLimitCounterStore). This ensures that rate limits are consistent across all deployed backend instances. If a user makes 3 login attempts to Server A and then 3 more to Server B within the rate limit period, both servers will consult the shared Redis store and correctly apply the limit (e.g., block the 6th attempt). This prevents bypassing the limit by round-robin requests. 
+   * The ConnectionStrings:Redis in appsettings.json points to the Redis instance.  
 4. **CORS Configuration:**  
    * CORS is explicitly configured in Program.cs to allow requests from the Angular frontend's origin (http://localhost:4200). In a production distributed environment, this origin would be updated to the actual domain(s) where your frontend is hosted.  
 5. **Horizontal Scaling Readiness:**  
@@ -189,8 +211,6 @@ The application is designed with horizontal scaling in mind, addressing the prob
 * **User Registration:** Add a user registration page.  
 * **Robust Error Handling:** Implement more sophisticated global error handling on both frontend and backend.  
 * **Environment Configuration:** Use environment-specific configuration files for API URLs and JWT settings (e.g., environment.ts in Angular, appsettings.Development.json in .NET).  
-* **Token Refresh:** Implement JWT token refreshing for long-lived sessions.  
-* **Distributed Cache for Rate Limiting:** Replace MemoryCacheRateLimitCounterStore with a distributed cache (e.g., Redis) for production deployments.  
+* **Token Refresh:** Implement JWT token refreshing for long-lived sessions.   
 * **Logging:** Integrate a robust logging framework (e.g., Serilog for .NET, Log4j for Angular) for better monitoring.  
 * **Unit and Integration Tests:** Add comprehensive tests for both frontend and backend.  
-* **Containerization (Docker):** Create Dockerfiles for both frontend and backend for easier deployment.
