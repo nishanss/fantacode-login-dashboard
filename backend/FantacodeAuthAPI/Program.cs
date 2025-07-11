@@ -3,27 +3,35 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using AspNetCoreRateLimit; 
 using Microsoft.AspNetCore.Authorization; 
-using Microsoft.OpenApi.Models; 
+using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMemoryCache(); 
-builder.Services.Configure<IpRateLimitOptions>(options =>
+// Add Redis connection
+builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.GeneralRules = new List<RateLimitRule>
-    {
-        new RateLimitRule
-        {
-            Endpoint = "*", 
-            Period = "1m",  
-            Limit = 100,    
-        }
-    };
+    options.Configuration = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
 });
-builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+
+// Configure Redis for rate limiting
+builder.Services.AddSingleton<IConnectionMultiplexer>(provider =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+    return ConnectionMultiplexer.Connect(connectionString);
+});
+
+builder.Services.AddMemoryCache(); 
+
+// Configure IP rate limiting with Redis - load from appsettings.json
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+
+// Use Redis for distributed rate limiting
+builder.Services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
+builder.Services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+
 builder.Services.AddHttpContextAccessor(); 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -83,7 +91,6 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireLoggedIn", policy => policy.RequireAuthenticatedUser());
-    
 });
 
 builder.Services.AddCors(options =>
@@ -98,7 +105,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -107,8 +113,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseIpRateLimiting();
+
 app.UseCors();
+app.UseIpRateLimiting();
 app.UseAuthentication(); 
 app.UseAuthorization();
 app.MapControllers();

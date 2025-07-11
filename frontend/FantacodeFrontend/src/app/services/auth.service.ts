@@ -75,18 +75,54 @@ export class AuthService {
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
+    
+    // Log the full error object to understand its structure
+    console.error('AuthService handleError: Full error object:', error);
+    console.error('AuthService handleError: Error status:', error.status);
+    console.error('AuthService handleError: Error message (from error.message):', error.message);
+    console.error('AuthService handleError: Error.error content:', error.error);
+
+
     if (error.error instanceof ErrorEvent) {
+      // Client-side error (e.g., network error before response)
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      if (error.status === 401) {
-        errorMessage = 'Unauthorized: Invalid credentials or token expired.';
-      } else if (error.error && error.error.message) {
-        errorMessage = `Server Error: ${error.error.message}`;
-      } else {
-        errorMessage = `Server returned code ${error.status}, body was: ${error.error}`;
+      // Server-side error (HTTP status code received)
+      switch (error.status) {
+        case 401:
+          errorMessage = 'Invalid username or password.';
+          break;
+        case 429:
+          // Prioritize the message from the backend's error.error property
+          // The backend sends "Too many requests. Please try again later." as a plain string in the body
+          errorMessage = typeof error.error === 'string'
+                         ? error.error // Backend sends plain string message
+                         : (error.error && error.error.message)
+                           ? error.error.message // Backend sends { message: "..." }
+                           : 'Too many requests. Please try again later.'; // Fallback generic message
+          break;
+        case 500:
+          errorMessage = 'Server error. Please try again later.';
+          break;
+        case 0:
+          // This case is often hit for network issues, CORS preflight failures,
+          // or when the browser aborts the request/response.
+          // If a 429 was truly sent, but client sees 0, it's a client-side network/browser issue.
+          // We'll keep this as a fallback for true connection issues.
+          errorMessage = 'Unable to connect to server. Please check your connection.';
+          break;
+        default:
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          } else if (error.error && typeof error.error === 'string') {
+            errorMessage = error.error;
+          } else {
+            errorMessage = `Server returned code ${error.status}. Please try again.`;
+          }
       }
     }
-    console.error('AuthService handleError:', errorMessage);
+    
+    console.error('AuthService handleError: Final error message for display:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }

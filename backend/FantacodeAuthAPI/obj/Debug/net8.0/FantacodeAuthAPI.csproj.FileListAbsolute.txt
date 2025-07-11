@@ -6,8 +6,10 @@
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/FantacodeAuthAPI.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/FantacodeAuthAPI.pdb
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/AspNetCoreRateLimit.dll
+/root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/AspNetCoreRateLimit.Redis.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Microsoft.AspNetCore.OpenApi.dll
+/root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Microsoft.Extensions.Caching.StackExchangeRedis.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Abstractions.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Logging.dll
@@ -16,6 +18,8 @@
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Microsoft.OpenApi.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Newtonsoft.Json.dll
+/root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Pipelines.Sockets.Unofficial.dll
+/root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/StackExchange.Redis.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Swashbuckle.AspNetCore.Swagger.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -27,6 +31,7 @@
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/FantacodeAuthAPI.csproj.CoreCompileInputs.cache
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/FantacodeAuthAPI.MvcApplicationPartsAssemblyInfo.cs
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/FantacodeAuthAPI.MvcApplicationPartsAssemblyInfo.cache
+/root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/FantacodeAuthAPI.sourcelink.json
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/staticwebassets.build.json
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/staticwebassets.development.json
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/staticwebassets/msbuild.FantacodeAuthAPI.Microsoft.AspNetCore.StaticWebAssets.props
@@ -41,4 +46,3 @@
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/FantacodeAuthAPI.pdb
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/FantacodeAuthAPI.genruntimeconfig.cache
 /root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/ref/FantacodeAuthAPI.dll
-/root/fantacode-login-dashboard/backend/FantacodeAuthAPI/obj/Debug/net8.0/FantacodeAuthAPI.sourcelink.json

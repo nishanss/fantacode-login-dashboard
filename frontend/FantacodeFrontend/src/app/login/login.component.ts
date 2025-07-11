@@ -13,6 +13,7 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: string = '';
+  loading = false; // Declare loading property here
 
   constructor(
     private fb: FormBuilder,
@@ -39,30 +40,25 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  loading = false;
   onSubmit() {
-    if (this.loginForm.invalid) return;
-    this.loading = true;
-    this.errorMessage = '';
-    this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
-        this.loading = false;
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err) => {
-        this.loading = false;
-        this.errorMessage = 'Invalid username or password';
-      }
-    });
-  
-    const { username, password } = this.loginForm.value;
+    if (this.loginForm.invalid) {
+      this.errorMessage = 'Please enter both username and password.';
+      return;
+    }
 
-    this.authService.login({ username, password }).subscribe({
-      next: (response) => {
+    this.loading = true;
+    this.errorMessage = ''; // Clear any previous error messages
+
+    // Single call to authService.login
+    this.authService.login(this.loginForm.value).subscribe({
+      next: (response) => { // Keep response for logging if needed
         console.log('LoginComponent onSubmit next: Login successful, response handled by AuthService tap.');
-        // The subscription in ngOnInit should now handle the redirection automatically
+        this.loading = false;
+        // Redirection is handled by ngOnInit subscription
       },
       error: (err) => {
+        this.loading = false;
+        // Use the error message from AuthService's handleError
         this.errorMessage = err.message || 'Login failed. Please try again.';
         console.error('LoginComponent onSubmit error:', err);
       }
