@@ -88,7 +88,7 @@ Before you begin, ensure you have the following installed on your system:
 
 ## <a name="setup">**Setup Instructions**
 
-Follow these steps to get the backend and frontend running on your local machine.
+Follow these steps to get the backend, frontend and Redis running on your local machine.
 
 ### <a name="backendsetup">**Backend Setup**
 
