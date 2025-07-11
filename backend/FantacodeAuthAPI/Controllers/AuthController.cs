@@ -16,7 +16,6 @@ namespace FantacodeLoginDashboard.Controllers
     {
         private readonly IConfiguration _configuration;
 
-        // Dummy user data (replace with DB in real app)
         private static readonly Dictionary<string, string> Users = new()
         {
             { "user1", "password123" },
@@ -28,7 +27,6 @@ namespace FantacodeLoginDashboard.Controllers
             _configuration = configuration;
         }
 
-        // POST: api/Auth/login
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginModel model)
         {
@@ -65,7 +63,6 @@ namespace FantacodeLoginDashboard.Controllers
             return Unauthorized(new { Message = "Invalid credentials" });
         }
 
-        // GET: api/Auth/dashboard
         [Authorize]
         [HttpGet("dashboard")]
         public IActionResult Dashboard()

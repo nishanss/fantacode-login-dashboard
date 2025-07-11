@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
-import { NgxChartsModule } from '@swimlane/ngx-charts'; // Import NgxChartsModule
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
     declarations: [
@@ -26,8 +26,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts'; // Import NgxChartsModul
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    BrowserAnimationsModule, // Add BrowserAnimationsModule
-    NgxChartsModule // Add NgxChartsModule
+    BrowserAnimationsModule, 
+    NgxChartsModule
     ],
     providers: [{
       provide: HTTP_INTERCEPTORS,

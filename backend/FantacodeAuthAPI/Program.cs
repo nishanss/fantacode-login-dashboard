@@ -8,13 +8,11 @@ using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Redis connection
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
 });
 
-// Configure Redis for rate limiting
 builder.Services.AddSingleton<IConnectionMultiplexer>(provider =>
 {
     var connectionString = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
@@ -23,10 +21,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(provider =>
 
 builder.Services.AddMemoryCache(); 
 
-// Configure IP rate limiting with Redis - load from appsettings.json
 builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
 
-// Use Redis for distributed rate limiting
 builder.Services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();

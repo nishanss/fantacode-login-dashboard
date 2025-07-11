@@ -1,4 +1,3 @@
-// src/app/dashboard/dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
@@ -10,12 +9,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  // Data for ngx-charts. It expects an array of objects with 'name' and 'value'.
-  // For a bar chart, it will be a single series.
   public chartData: any[] = [];
 
-  // ngx-charts options
-  public view: [number, number] = [700, 400]; // Chart dimensions [width, height]
+  public view: [number, number] = [700, 400]; 
   public showXAxis = true;
   public showYAxis = true;
   public gradient = false;
@@ -26,12 +22,11 @@ export class DashboardComponent implements OnInit {
   public yAxisLabel = 'Sales Amount';
   public animations = true;
   
-  // FIXED: Use the correct format for ngx-charts color scheme
   public colorScheme: any = {
     name: 'myScheme',
     selectable: true,
     group: 'Ordinal',
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA'] // Customize colors
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA'] 
   };
 
   public errorMessage: string = '';
@@ -42,9 +37,6 @@ export class DashboardComponent implements OnInit {
     this.fetchDashboardData();
   }
 
-  /**
-   * Fetches dashboard data from the backend using AuthService.
-   */
   fetchDashboardData(): void {
     this.errorMessage = '';
 
@@ -52,7 +44,6 @@ export class DashboardComponent implements OnInit {
       next: (data) => {
         console.log('Dashboard data received:', data);
         if (data && data.labels && data.values) {
-          // Transform backend data into ngx-charts format: [{ name: 'Month', value: Sales }]
           this.chartData = data.labels.map((label: string, index: number) => ({
             name: label,
             value: data.values[index]
@@ -72,9 +63,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  /**
-   * Handles user logout.
-   */
   logout(): void {
     this.authService.logout();
   }

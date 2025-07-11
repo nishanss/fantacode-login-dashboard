@@ -1,4 +1,3 @@
-// src/app/login/login.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,14 +5,14 @@ import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  standalone: false, // Keep this as per your working version
+  standalone: false,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: string = '';
-  loading = false; // Declare loading property here
+  loading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -47,18 +46,15 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    this.errorMessage = ''; // Clear any previous error messages
+    this.errorMessage = ''; 
 
-    // Single call to authService.login
     this.authService.login(this.loginForm.value).subscribe({
-      next: (response) => { // Keep response for logging if needed
+      next: (response) => { 
         console.log('LoginComponent onSubmit next: Login successful, response handled by AuthService tap.');
         this.loading = false;
-        // Redirection is handled by ngOnInit subscription
       },
       error: (err) => {
         this.loading = false;
-        // Use the error message from AuthService's handleError
         this.errorMessage = err.message || 'Login failed. Please try again.';
         console.error('LoginComponent onSubmit error:', err);
       }
